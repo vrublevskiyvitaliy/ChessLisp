@@ -57,7 +57,7 @@ writing the number will suffice.
 	    (color-to-num bg-color :bg))))
 
 (defun print-diagram (board &key (stream t))
-  "Выводит текущее положение в виде диаграммы."
+  "Теперішню позицію у вигляді діаграми."
   ;; see http://en.wikipedia.org/wiki/Box-drawing_character
   ;; and http://en.wikipedia.org/wiki/Chess_symbols_in_Unicode
   (let ((white (list :pawn (coerce '(#\u2659) 'string)
@@ -79,7 +79,7 @@ writing the number will suffice.
 			       (xterm-font-color :bg-color :white)
 			       (coerce '(#\u2593) 'string)
 			       (xterm-font-color))))
-    (setf black-sq " ") ; esc-послед не работают
+    (setf black-sq " ") ;
     (flet ((ij-to-square (i j) (+ (* 8 i) j))
 	   (draw-horiz (mode) ; top, middle, or bottom
 	     (let ((lc (coerce (ecase mode (:top '(#\u256d)) (:middle '(#\u251c)) (:bottom '(#\u2570))) 'string))
@@ -89,10 +89,10 @@ writing the number will suffice.
 	       (dotimes (x 8) (format stream "~A~A~A~A" cr horiz-line horiz-line horiz-line))
 	       (format stream "~A~%" rc))))
       (draw-horiz :top)
-      ;; доска выводится строчками сверху-вниз; каждое поле занимает 4 смвола.
+      ;; дошка виводиться зверху вниз; кожне поле займає 4 символа.
       (do ((line 7 (1- line)))
 	  ((< line 0))
-	(format stream "~A~D" vert-line (1+ line)) ; граница доски и номер строки
+	(format stream "~A~D" vert-line (1+ line)) ; край дошки і номер рядка
 	(do ((col 1 (1+ col)))
 	    ((> col 8))
 	  (multiple-value-bind (p c) (whos-at board (ij-to-square line col))
@@ -103,7 +103,7 @@ writing the number will suffice.
 	      (format stream "~A ~A "
 		      vert-line
 		      (if (= (mod (+ line col) 2) 1) black-sq white-sq)))))
-	(format stream "~A~%" vert-line)  ; граница доски
+	(format stream "~A~%" vert-line)  ; край дошки
 	(draw-horiz :middle)
 	(when (= line 0)
 	  (format stream "~A " vert-line)
