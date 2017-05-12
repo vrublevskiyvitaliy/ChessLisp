@@ -33,7 +33,6 @@
                (:file "moves")
                (:file "evaluate")
                (:file "exchange")
-               (:file "debug-frontend")
                (:module "chain"
                         :serial t
                         :pathname "chain"
