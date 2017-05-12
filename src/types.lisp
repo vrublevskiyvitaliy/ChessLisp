@@ -1,7 +1,5 @@
 ;;;; -*- Mode: Lisp; Syntax: ANSI-Common-Lisp; Base: 10 -*-
 ;;;;
-;;;; $Id: types.lisp 12 2013-03-30 16:10:21Z serg $
-;;;;
 ;;;; Основные типы данных.
 ;;;;
 
@@ -10,13 +8,13 @@
 (deftype color () '(member :white :black))
 (deftype piece-kind () '(member :king :queen :rook :bishop :knight :pawn))
 (deftype square ()
-  "Поля задаются целыми числами из интервала [1,64]. Для преобразования строк вида 'a3' к элементам типа square может использоваться функция string-to-square или форма #@a3@."
+  "Поля задаються цілими числами з інтервалу [1,64]. Для перетворення рядків виду 'a3'  до типа square функція string-to-square або форма #@a3@."
   '(integer 1 64))
 
 (defstruct (move
 	     (:constructor create-move (from to &optional transform))
 	     (:print-function print-move))
-  "Структура для описания хода. BOA конструктор create-move. FROM и TO являются обязательными полями, TRANSFORM имеет смысл только для хода пешкой на 8-ю горизонталь."
+  "Структура для опису хода. BOA конструктор create-move. FROM и TO являются обовязкові поля, TRANSFORM тільки для ходу пішака на 8 горизонталь."
   (from nil :type square)
   (to nil :type square)
   (transform nil :type (or null piece-kind)))
