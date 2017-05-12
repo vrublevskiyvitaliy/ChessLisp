@@ -1,13 +1,12 @@
 ;;;; -*- Mode: Lisp; Syntax: ANSI-Common-Lisp; Base: 10 -*-
 ;;;;
-;;;; Функции для связи с xboard
+;;;; Функції для звязку з xboard
 ;;;;
-;;;; $Id: xboard.lisp 16 2013-07-04 20:53:22Z serg $
 ;;;;
 
 (in-package :ccs)
 
-(defvar *show-thinking* t "Выводить ли текущий вариант в xboard.")
+(defvar *show-thinking* t "Чи виводити в xboard.")
 
 
 (defun read-xboard-edit (command state)
@@ -15,7 +14,7 @@
     ((string= command "#") (clear *board*) t)
     ((string= command "c") (setf state :black) t)
     ((string= command ".") nil)
-    (t ; фигура и поле: Ne4 или Pa2
+    (t ; фігура чи поле: Ne4 або Pa2
      (let* ((pkind (piece-by-name (elt command 0)))
 	    (square (string-to-square (subseq command 1 3)))
 	    (the-piece (make-instance 'piece :kind pkind :color state)))
@@ -31,11 +30,11 @@
 	(force-mode nil)
 	(should-move nil)
 	move)
-    (format output-stream "feature myname=\"CCS 0.1\"~%")
+    (format output-stream "feature myname=\"ChessEngine 0.1\"~%")
     (loop
        ;(when (not (listen)) t)
        (setf command (read-line))
-       (setf move (parse-move-string command)) ; nil, если это не ход
+       (setf move (parse-move-string command)) ; nil якщо це не хід
        (cond
 	 ((not (null parser))
 	  (let ((pout (funcall parser command)))
@@ -46,12 +45,12 @@
 
 	 ((string-equal "xboard" command)
 	  (format output-stream "~%"))
-	 ((string-equal "force" command) ; не думать
+	 ((string-equal "force" command) ; не думати
 	  (setf force-mode t))
-	 ((string-equal "go" command) ; ходить
+	 ((string-equal "go" command) ; ходити
 	  (setf force-mode nil)
 	  (setf should-move t))
-	 ((string-equal "new" command) ; новая партия
+	 ((string-equal "new" command) ; нова партія
 	  (new-game *board*))
 	 ((string-prefix "protover" command) t)
 
@@ -74,7 +73,7 @@
 	   (format output-stream "move ~A~A~%"
 		   (square-to-string (move-from move))
 		   (square-to-string (move-to move))))
-	 (setf should-move nil)) ; ждем хода от соперника
+	 (setf should-move nil)) ; чекаємо ходу суперника
        t)))
 
 
