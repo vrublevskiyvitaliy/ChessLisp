@@ -1,3 +1,2 @@
 
-
-(defvar *board* nil "Текущая позиция.")
+(defvar *board* nil "Теперішня позиція.")
