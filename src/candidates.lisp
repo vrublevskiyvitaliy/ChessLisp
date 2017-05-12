@@ -1,15 +1,13 @@
 ;;;; -*- Mode: Lisp; Syntax: ANSI-Common-Lisp; Base: 10 -*-
 ;;;;
-;;;; $Id: candidates.lisp 18 2013-07-06 11:05:00Z serg $
-;;;;
-;;;; Выбор ходов-кандидатов
+;;;; Вибір ходів кандидатів
 ;;;;
 
 (in-package :ccs)
 
 (labels
     ((find-valid-moves (board color &aux res)
-       "Возвращает список допустимых ходов фигурами цвета color."
+       "Повертає список допустимих ходів фігурами кольору color."
        (do-pieces (board (p from) :color color)
          (push
           (mapcan #'(lambda (to &aux m)
@@ -20,11 +18,11 @@
        (apply #'append res)))
 
   (defun candidate-moves (board &key (color (turn board)))
-    "Поиск лучших ходов. Возвращается список cons-ов ход.оценка. Оценка всегда со стороны белых."
+    "Пошук кращих ходів. Повертає список cons-ів хід.оцінка. Оцінка зі сторони білих."
     (let ((possible-moves (find-valid-moves board color))
 	  moves-values
-	  (better-move-p (if (eql color :white) #'>= #'<=)))  ; How to compare moves' goodness
-      ;; оценим ходы
+	  (better-move-p (if (eql color :white) #'>= #'<=)))  ; Порівняння в залежності від кольору
+      ;; оцінимо ходи
       (setf moves-values
 	    (sort
 	     (mapcar #'(lambda (m)
@@ -36,4 +34,4 @@
              better-move-p
              :key #'cdr))
       moves-values))
-) ; end of labels
+)
