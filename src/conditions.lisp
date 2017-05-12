@@ -1,5 +1,5 @@
 ;;;;
-;;;; Possible conditions
+;;;; Можливі умови - помилка
 ;;;;
 
 (define-condition ccs-error (error)
