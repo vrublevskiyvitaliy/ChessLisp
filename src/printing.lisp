@@ -1,7 +1,5 @@
 ;;;; -*- Mode: Lisp; Syntax: ANSI-Common-Lisp; Base: 10 -*-
 ;;;;
-;;;; $Id: printing.lisp 16 2013-07-04 20:53:22Z serg $
-;;;;
 
 (in-package :ccs)
 
