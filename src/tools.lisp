@@ -6,7 +6,7 @@
 
 
 (defun string-to-square (str)
-  "Преобразование из строки вида 'h3' в элемент типа square."
+  "Перетворення з рядка виду 'h3' в елемент типу square."
   (let ((p
 	(position str '(:a1 :b1 :c1 :d1 :e1 :f1 :g1 :h1
 			:a2 :b2 :c2 :d2 :e2 :f2 :g2 :h2
@@ -17,7 +17,7 @@
 			:a7 :b7 :c7 :d7 :e7 :f7 :g7 :h7
 			:a8 :b8 :c8 :d8 :e8 :f8 :g8 :h8)
 		  :test #'string-equal)))
-    (if p (+ 1 p) (error "~A не является корректным обозначением поля." str))))
+    (if p (+ 1 p) (error "~A не є коректним позначенням поля." str))))
 
 
 (defun square-to-string (sq)
@@ -29,14 +29,14 @@
 
 (declaim (inline opposit-color))
 (defun opposite-color (color)
-  "Возвращает противоположенный цвет."
+  "Повертає протилежний колір."
   (declare (color color))
   (if (eql color :white) :black :white))
 
 
 
 (defun parse-move-string (s)
-  "Разбирает строку в формате xboard. Например, e3e4, g1f3 или f7b8Q. Возвращает структуру move, если удалось разобрать строку, иначе nil."
+  "Розбирає рядок в форматі xboard. Приклад, e3e4, g1f3 або f7b8Q. Повертає структуру move, якщо все ок, або nil."
   (if (<= 4 (length s) 5)
       (handler-case
 	  (let* ((len (length s))
@@ -49,7 +49,7 @@
 
 
 (defun |#@-reader| (stream sub-char numarg)
-  "Считывает либо обозначение поля (e2), либо хода (e2e4). Возвращает square или move."
+  "Зчитує або поле (e2), або хід (e2e4). Повертає square або move."
   (declare (ignore sub-char numarg))
   (let (chars)
     (do ((curr (read-char stream) (read-char stream)))
