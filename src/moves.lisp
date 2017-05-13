@@ -1,24 +1,23 @@
 ;;;; -*- Mode: Lisp; Syntax: ANSI-Common-Lisp; Base: 10 -*-
 ;;;;
-;;;; Фнкции, связанные с ходами на пустой доске и проверкой корректности
+;;;; Функції повязані з ходами на пустій дошці і перевірці коректності
 ;;;;
-;;;; $Id: moves.lisp 18 2013-07-06 11:05:00Z serg $
 ;;;;
 
 
 (in-package :ccs)
 
 
-;;; Ходы на пустой доске
+;;; Ходи на пустій дошці
 
 (defgeneric moves (piece start &key color)
-  (:documentation "Возвращает все возможные ходы (список полей) фигуры PIECE цвета COLOR с поля START на пустой доске."))
+  (:documentation "Повертає всі можливі ходи (список полів) фігури PIECE кольору COLOR з поля START на пустій дошці."))
 
 (defgeneric pre-moves (piece to &key color attack-only)
   (:documentation "Find all squares where a PIECE should be placed in order to reach TO field in one move."))
 
 (defmethod moves ((piece (eql :rook)) start &key (color :white))
-  "Rachable squares by rook ладья"
+  "Rachable squares by rook тура"
   (declare (ignorable color))
   (loop :for p :from 1 :to 64
      :when (and
@@ -47,12 +46,12 @@
 (defmethod moves ((piece (eql :king)) start &key (color :white))
   (loop :for p :from 1 :to 64
      :when (or
-	    ;; ход на одно поле
+	    ;; хід на одне поле
 	    (and
 	     (<= (abs (- (mod (1- p) 8) (mod (1- start) 8))) 1)
 	     (<= (abs (- (ceiling p 8) (ceiling start 8))) 1)
 	     (not (= p start)))
-	    ;; рокировка
+	    ;; рокіровка
 	    (and (= start (if (eql color :white) #@e1@ #@e8@))
 		 (= (abs (- p start)) 2)))
      :collecting p))
@@ -100,7 +99,7 @@
           :collect sq))
     (t (moves (kind piece) to :color (or color (color piece))))))
 
-;;; Поиск возможных траекторий движения фигуры на пустой доске
+;;; Пошук можливих траєкторій руху фігури на пустій дошці
 
 (fare-memoization:define-memo-function find-paths (piece start end horizon &key (color :white))
   "Return: list of paths; each path is a list of squares."
@@ -134,10 +133,10 @@ squares. (1 2 3) => ((1 . 2) (2 . 3))"
      :when (cdr tail) :collect (cons (first tail) (second tail))))
 
 
-;;; Проверка допустимости хода
+;;; Перевірка допустимості ходу
 
 (defun squares-on-line (start end &key (include-frontier t))
-  "Список полей между START и END (вертикаль, горизонталь или диагональ), включая FROM и TO."
+  "Список полів між START і END (вертикаль, горизонталь або діагональ), включаючи FROM і TO."
   (let ((from (min start end))
 	(to (max start end))
 	offset path)
@@ -159,7 +158,7 @@ squares. (1 2 3) => ((1 . 2) (2 . 3))"
 
 
 (defun free-line-p (board from to)
-  "Проверка того, что на линии между FROM и TO нет фигур. Занятость полей FROM и TO не учитывается. Возвращает nil, если FROM и ТО не находятся на одной прямой."
+  "Перевірка того, що на лінії між FROM і TO немає фігур. Зайнятість полів FROM і TO не враховується. Повертається nil, якщо FROM і ТО не знаходятся на одній прямій."
   (let ((from (min from to))
 	(to (max from to))
 	line)
@@ -172,7 +171,7 @@ squares. (1 2 3) => ((1 . 2) (2 . 3))"
 
 
 (defun castling-move-p (piece color move)
-  "Проверка того, что ход является рокировкой."
+  "Перевірка того, що хід є рокіровкою."
   (let ((offset (if (eql color :white) 0 56)))
     (and
      (eql (kind piece) :king)
@@ -182,83 +181,83 @@ squares. (1 2 3) => ((1 . 2) (2 . 3))"
 
 
 (defun pawn-take-move-p (piece color move)
-  "Проверка того, что ход является взятием пешкой."
+  "Перевірка того, що хід є взяття пішаком."
   (let ((from (move-from move))
 	(to (move-to move)))
     (and
      (eql (kind piece) :pawn)
      (member to (moves piece from :color color))
-     (not (= (mod from 8) (mod to 8)))))) ; пешка меняет вертикаль
+     (not (= (mod from 8) (mod to 8)))))) ; пішак міняє вертикаль
 
 
 (defun attackers (board to &key (from nil) (color nil) (attack-only t) (free-line t))
-  "Возвращает список полей на которых стоят фигуры цвета COLOR, атакующие
-   в позиции BOARD поле TO. Если COLOR не задано, то выдаются фигуры обоих
-   цветов. Если задано поле FROM, то проверяется только эта фигура.
-   Если ATTACK-ONLY равно nil, то добавлются рокировки и ходы пешками по прямой.
-   FREE-LINE nil отключает проверку того, что тракектория движения фигуры свободна.
+  "Повертає список полів на яких стояит фігури кольору COLOR, які атакують
+   в позиції BOARD поле TO. Якщо COLOR не задано, то видаються фігури обох
+   кольорів. Якщо задано поле FROM, то перевіряється лише ця фігура.
+   Якщо ATTACK-ONLY = nil, то додаються рокіровка та ходи пішаками по прямій.
+   FREE-LINE nil відключає перевірку того, що траєкторія руху вільна.
    "
   (check-type board board)
   (let (res)
     (loop :for from-sq :from (or from 1) :to (or from 64) :do
        (multiple-value-bind (p c) (whos-at board from-sq)
-         (when (and (not (null p)) ; на поле from есть фигура
-                    (or (not color) (eql color c)) ; нужного цвета
-                    (member to (moves p from-sq :color c)) ; фигура может попасть на to
-                    (or (not free-line) ; проверка не нужна
-                        (eql (kind p) :knight) ; не имеет смысла
-			(free-line-p board from-sq to)) ; свободны поля на пути
+         (when (and (not (null p)) ; на поле from є фігура
+                    (or (not color) (eql color c)) ; потрібного кольору
+                    (member to (moves p from-sq :color c)) ; фігура може потрапити на to
+                    (or (not free-line) ; перевірка не потрібна
+                        (eql (kind p) :knight)
+			(free-line-p board from-sq to)) ; вільні поля
                     (or (not attack-only)
-                        (and ; дополнительные условия, если нужны только нападения
-                         (or (not (eql (kind p) :pawn))
-                             (not (= (mod from-sq 8) (mod to 8)))) ; пешка меняет вертикаль
-                         (not (castling-move-p p c (create-move from-sq to)))))) ; не рокировка
+                        (and ; додаткові умови якщо лише напад
+                            (or (not (eql (kind p) :pawn))
+                             (not (= (mod from-sq 8) (mod to 8)))) ; пішак міняє вертикаль
+                         (not (castling-move-p p c (create-move from-sq to)))))) ; не рокіровка
            (push from-sq res))))
     res))
 
 
 (defun check-p (board color)
-  "Проверка того, что есть шах королю цвета COLOR."
+  "Перевірка того, що є шах королю кольору COLOR."
   (let ((k-square (first (find-pieces board :king color))))
     (attackers board k-square :color (opposite-color color))))
 
 
 (defun valid-move-p (board move &key (valid-turn nil))
   (declare (board board) (move move))
-  "Проверка допустимости хода MOVE. Если VALID-TURN не равно NIL, то проверяется, что на поле from стоит фигура того цвета, чей в данный момент ход."
+  "Перевірка допустимості ходу MOVE. Якщо VALID-TURN != NIL, то перевіряється що на полі from стоїть фігура того кольору, чий хід зараз."
   (let ((from (move-from move))
 	(to (move-to move)))
   (multiple-value-bind (piece color) (whos-at board from)
     (multiple-value-bind (piece-to color-to) (whos-at board to)
-      (when (and (or (null valid-turn) (eql color (turn board))) ; наша фигура на поле from
-		 (attackers board to :from from :color color :attack-only nil) ; может попасть на поле to
+      (when (and (or (null valid-turn) (eql color (turn board))) ; наша фігура на полі from
+		 (attackers board to :from from :color color :attack-only nil) ; може потрапити на поле to
 		 (not (eql color color-to)) ; на поле to нет нашей фигуры
-		 (not (check-p (make-move (copy-board board) move) color))) ; после хода нам нет шаха
-	;; обязательные условия выполнены;
-	;; проверим несколько специальных случаев невозможности хода
+		 (not (check-p (make-move (copy-board board) move) color))) ; посля ходу нам немає шаху
+    ;; основні умови виконані;
+	;; додаткові
 	(cond
 	  ((eql (kind piece) :pawn)
 	   (if (pawn-take-move-p piece color move)
 	       (when
-		   (not (or ; проверим условия взятия
-			 (eql color-to (opposite-color color)) ; есть кого есть
-			 (eql to (enpassant board)))) ; возможно взятие на проходе
+		   (not (or ; умова взяття пішака
+			 (eql color-to (opposite-color color)) ; є хтось
+			 (eql to (enpassant board)))) ; можливе взяття на проході
 		 (return-from valid-move-p nil))
-	       ;; это не взятие - поле to должно быть свободно
+	       ;; це не взяття - поле to має бути вільне
 	       (when (not (null piece-to))
 		 (return-from valid-move-p nil))))
 	  ((eql (kind piece) :king)
-	   ;; условия невозможности рокировки
+	   ;; уомва неможливості  рокіровки
 	   (when (castling-move-p piece color move)
 	     (when (or
-		    (not (member to (castlings board))) ; кто-то уже ходил
-		    (not (free-line-p board from (if (< to from) (- to 2) (+ to 1)))) ; занято где-то до b1, g1
-		    ;; шах или битое поле
+		    (not (member to (castlings board))) ; хтось ходив
+		    (not (free-line-p board from (if (< to from) (- to 2) (+ to 1)))) ; зайняте b1, g1
+		    ;; шах або бите поле
 		    (some (complement #'null)
 			  (mapcar #'(lambda (sq)
 				      (attackers board sq :color (opposite-color color)))
 				  (squares-on-line from to))))
 	       (return-from valid-move-p nil)))))
-	;; все условия выполнены
+	;; все виконано
 	(return-from valid-move-p t))
     nil))))
