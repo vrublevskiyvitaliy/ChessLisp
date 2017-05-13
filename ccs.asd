@@ -19,7 +19,7 @@
 (asdf:defsystem "ccs"
   :name "CCS"
   :version "0.1"
-  :author "serg"
+  :author "vita&rita"
   ;;:pathname #P"ccs:code;"
   :pathname "src"
   :serial t
