@@ -1,8 +1,7 @@
 ;;;; -*- Mode: Lisp; Syntax: ANSI-Common-Lisp; Base: 10 -*-
 ;;;;
-;;;; $Id: evaluate.lisp 17 2013-07-06 11:03:20Z serg $
 ;;;;
-;;;; Оценка позиции
+;;;; Оцінка позиції
 ;;;;
 
 (in-package :ccs)
@@ -45,7 +44,7 @@
 
 
 (defun square-value (board square)
-  "Оценка важности поля. Возвращает действительное число из [0,1]. Текущая реализация не учитывает положение фигур на доске и придает больший вес центральным полям."
+  "Оцінка важливості поля. Повертає число з [0,1]. Не враховується положення фігур на дошці та дає більшу вагу на центральні поля."
   (declare (ignorable board))
   (check-type square square)
   (case square
@@ -70,7 +69,7 @@
 
 
 (defun piece-activity (board piece-at)
-  "Оценка активности фигуры на поле PIECE-AT. Возвращает действительное число."
+  "Оцінка активності фігури на полі PIECE-AT. Дійсне число."
   (multiple-value-bind (p color) (whos-at board piece-at)
     (let ((p-moves (possible-moves board
                                    piece-at))
@@ -103,7 +102,7 @@
 	       (incf val ev))))
 	 val)
 
-       ;; Активность фигур.
+       ;; Активність фігур
        (act (board color &aux (val 0.0d0) (npieces 0))
          (do-pieces (board (p sq) :color color)
            (incf val (piece-activity board sq))
@@ -118,9 +117,9 @@
            (/ w npieces))))
 
   (defmethod value-of ((b board) &key)
-    "Оценка позиции. Позиция всегда оценивается с точки зрения белых."
-    (let ((material (- (total b :white) (total b :black))) ; простая стоимость фигур
-	  (activity (- (act b :white) (act b :black))) ; активность фигур
+    "Оцінка позиції."
+    (let ((material (- (total b :white) (total b :black))) ; проста вартість фігур
+	  (activity (- (act b :white) (act b :black))) ; активність фігур
 	  (exch (exch b))
           (weakness (- (weakness b :white) (weakness b :black))))
       (log-message :trace

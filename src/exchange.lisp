@@ -1,7 +1,6 @@
 ;;;; -*- Mode: Lisp; Syntax: ANSI-Common-Lisp; Base: 10 -*-
 ;;;;
-;;;; Размен на поле
-;;;;
+;;;; Розмін на поле
 ;;;;
 
 (in-package :ccs)
@@ -15,7 +14,7 @@
 
 
 (defun optimal-cut (trace color &optional (current (cons 0.0d0 nil)))
-  "COLOR делают первый ход в последовательности TRACE, взвешенной с точки зрения белых."
+  "COLOR роблять перший хід в послідовності TRACE, зважена з точки білих."
   (if (null trace)
       current
       (let
@@ -29,8 +28,7 @@
 
 
 (defun %exchange-value-aux (board sq color)
-  "Вычисляет значение размена на поле SQ, при условии, что первый ход делают COLOR.
- Оценка вычисляется с точки зрения белых."
+  "Обраховується значення розміну на поле SQ, при умові, що перший хід роблять COLOR."
   (let ((val 0.0d0)
         (t-board (copy-board board))
         exchange-trace
