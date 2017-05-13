@@ -33,17 +33,6 @@
                (:file "moves")
                (:file "evaluate")
                (:file "exchange")
-               (:module "chain"
-                        :serial t
-                        :pathname "chain"
-                        :components ((:file "parameters")
-                                     (:file "classes")
-                                     (:file "trajectory")
-                                     (:file "chain")
-                                     (:file "support")
-                                     (:file "position")
-                                     (:file "db")
-                                     (:file "graph")))
                (:file "candidates")
                (:file "play")
                (:file "xboard")
