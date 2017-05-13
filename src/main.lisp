@@ -1,6 +1,5 @@
 ;;;; -*- Mode: Lisp; Syntax: ANSI-Common-Lisp; Base: 10 -*-
 ;;;;
-;;;; $Id: main.lisp 16 2013-07-04 20:53:22Z serg $
 ;;;;
 
 (in-package :ccs)
@@ -19,7 +18,7 @@
 
 
 (defun main (&key (interface-mode :xboard) (log-file "/tmp/ccs.log"))
-  ;; Инициализация системы журналирования
+  ;; Ініціалізація системи логування
   (setf (log-manager)
         (make-instance 'log-manager :message-class 'formatted-message))
   (when log-file
@@ -29,7 +28,7 @@
   (log-message :trace "Hello")
   (case interface-mode
     (:xboard (read-xboard-commands))
-    (t (error 'ccs-error :text "Неизвестный тип пользовательского интерфейса."))))
+    (t (error 'ccs-error :text "Невідомий тип інтерфейсу."))))
 
 
 
