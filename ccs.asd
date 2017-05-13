@@ -45,7 +45,6 @@
                                      (:file "db")
                                      (:file "graph")))
                (:file "candidates")
-               ;(:file "representation")
                (:file "play")
                (:file "xboard")
                (:file "main"))

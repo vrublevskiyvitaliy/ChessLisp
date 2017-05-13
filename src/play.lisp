@@ -1,12 +1,10 @@
 ;;;; -*- Mode: Lisp; Syntax: ANSI-Common-Lisp; Base: 10 -*-
 ;;;;
 ;;;;
-;;;; $Id: play.lisp 16 2013-07-04 20:53:22Z serg $
-;;;;
 
 (in-package :ccs)
 
-(defvar *board* (make-instance 'board) "Текущая позиция.")
+(defvar *board* (make-instance 'board) "Теперішня позиція.")
 
 
 (defun auto-play (board &key (half-moves-limit 10))
@@ -21,14 +19,14 @@
 
 
 (defun play (board)
-  "Находит и делает лучший ход в позиции BOARD. Возвращает сделанный ход."
+  "Знаходить та роблить найкращий хід в BOARD. Повертає хід."
   (show-output "Let me think...")
   (let ((moves-values (candidate-moves board))
         best-move
         better-move-p
         (color (turn board)))
     (when (null moves-values) (return-from play nil))
-    (setf better-move-p (if (eql color :white) #'>= #'<=)) ; How to compare moves
+    (setf better-move-p (if (eql color :white) #'>= #'<=)) ; Як порівнювати ходи
     (flet ((best-move-p (mv) (funcall better-move-p (cdr mv) (cdar moves-values))))
       (setf best-move
             (random-elt (delete-if-not #'best-move-p moves-values))))
